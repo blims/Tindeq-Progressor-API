@@ -198,9 +198,8 @@ async def run(loop, debug=False):
             break
 
     async with BleakClient(address) as client:
-        x = await client.is_connected()
+        print("Device is connected.")
         csv_create()
-        print("Connected: {0}".format(x))
 
         await client.start_notify(DATA_CHAR_UUID, notification_handler)
         current_cmd_request = CMD_GET_APP_VERSION

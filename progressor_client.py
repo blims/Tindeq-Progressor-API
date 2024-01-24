@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from bleak import BleakClient
-from bleak import discover
+from bleak import BleakScanner
 from bleak import _logger as logger
 
 TARGET_NAME = "Progressor"
@@ -189,7 +189,8 @@ async def run(loop, debug=False):
         # h.setLevel(logging.DEBUG)
         # l.addHandler(h)
 
-    devices = await discover()
+    scanner = BleakScanner()
+    devices = await scanner.discover(timeout=10)
     for d in devices:
         if d.name[:len(TARGET_NAME)] == TARGET_NAME:
             address = d.address

@@ -203,17 +203,17 @@ async def run(loop, debug=False):
 
         await client.start_notify(DATA_CHAR_UUID, notification_handler)
         current_cmd_request = CMD_GET_APP_VERSION
-        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, [CMD_GET_APP_VERSION], response=True)
+        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, bytearray([CMD_GET_APP_VERSION]), response=True)
         await asyncio.sleep(.5)
         current_cmd_request = CMD_GET_BATTERY_VOLTAGE
-        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, [CMD_GET_BATTERY_VOLTAGE], response=True)
+        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, bytearray([CMD_GET_BATTERY_VOLTAGE]), response=True)
         await asyncio.sleep(.5)
         current_cmd_request = CMD_GET_ERROR_INFORMATION
-        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, [CMD_GET_ERROR_INFORMATION], response=True)
+        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, bytearray([CMD_GET_ERROR_INFORMATION]), response=True)
         await asyncio.sleep(.5)
-        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, [CMD_START_WEIGHT_MEAS], response=True)
+        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, bytearray([CMD_START_WEIGHT_MEAS]), response=True)
         await asyncio.sleep(10)
-        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, [CMD_ENTER_SLEEP])
+        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, bytearray([CMD_ENTER_SLEEP]))
 
 
 if __name__ == "__main__":

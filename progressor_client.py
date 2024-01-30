@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from bleak import BleakClient
-from bleak import discover
+from bleak import BleakScanner
 from bleak import _logger as logger
 
 TARGET_NAME = "Progressor"
@@ -189,7 +189,8 @@ async def run(loop, debug=False):
         # h.setLevel(logging.DEBUG)
         # l.addHandler(h)
 
-    devices = await discover()
+    scanner = BleakScanner()
+    devices = await scanner.discover(timeout=10)
     for d in devices:
         if d.name[:len(TARGET_NAME)] == TARGET_NAME:
             address = d.address
@@ -197,23 +198,22 @@ async def run(loop, debug=False):
             break
 
     async with BleakClient(address) as client:
-        x = await client.is_connected()
+        print("Device is connected.")
         csv_create()
-        print("Connected: {0}".format(x))
 
         await client.start_notify(DATA_CHAR_UUID, notification_handler)
         current_cmd_request = CMD_GET_APP_VERSION
-        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, [CMD_GET_APP_VERSION], response=True)
+        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, bytearray([CMD_GET_APP_VERSION]), response=True)
         await asyncio.sleep(.5)
         current_cmd_request = CMD_GET_BATTERY_VOLTAGE
-        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, [CMD_GET_BATTERY_VOLTAGE], response=True)
+        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, bytearray([CMD_GET_BATTERY_VOLTAGE]), response=True)
         await asyncio.sleep(.5)
         current_cmd_request = CMD_GET_ERROR_INFORMATION
-        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, [CMD_GET_ERROR_INFORMATION], response=True)
+        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, bytearray([CMD_GET_ERROR_INFORMATION]), response=True)
         await asyncio.sleep(.5)
-        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, [CMD_START_WEIGHT_MEAS], response=True)
+        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, bytearray([CMD_START_WEIGHT_MEAS]), response=True)
         await asyncio.sleep(10)
-        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, [CMD_ENTER_SLEEP])
+        await client.write_gatt_char(CTRL_POINT_CHAR_UUID, bytearray([CMD_ENTER_SLEEP]))
 
 
 if __name__ == "__main__":
